@@ -1,9 +1,10 @@
-class List:
+class ToDoList:
     tasks = []
 
-    def __init__(self, list_name):
+    def __init__(self, list_name, list_id=None):
         self.list_name = list_name
-        #list id
+        self.list_id = list_id
+        
 
     def show_list(self):
         '''displays all list tasks'''
@@ -14,99 +15,116 @@ class List:
         
         self.show_progress()
     
-    def add_list(self, list_name):
-        '''add new empty todo list'''
+    def save(self, conn):
+        query = f"INSERT INTO list (name) VALUES ('{self.list_name}') returning *"
+        with  conn.cursor() as cur:
+            # execute the INSERT statement
+            cur.execute(query)
+            # get the generated id back
+            row = cur.fetchone()
+            if row:
+                self.list_id = row[1]
+                print(f'list {self.list_name} added successfuly')
+            conn.commit()
 
-        try:
-            pass
-            #todo: add list to db
-        except Exception as e:
-            print(e)
-        return List(list_name)
-        
     
-    def delete_list(self, list_id):
+    def delete_list(self, conn):
         '''delete todo list, list tasks delete cascade'''
+        query = f"DELETE FROM list WHERE list_id = {self.list_id};"
 
         try:
-            pass
-            #todo: delete list and its tasks from db
+            with  conn.cursor() as cur:
+                cur.execute(query)
+                conn.commit()
+
         except Exception as e:
-            print('list not exist')
+            raise e
             return False
         return True
 
-    def update_list_name(self, new_name):
+    def update_list_name(self, new_name, conn):
         '''updates list name'''
-        self.list_name = new_name
+        
+        query = f'''
+            UPDATE list
+            SET name = '{new_name}'
+            WHERE list_id = {self.list_id};
+            '''
         try:
-            pass
-            #todo: update list in db
+            with  conn.cursor() as cur:
+                cur.execute(query)
+                self.list_name = new_name
+                conn.commit()
         except Exception as e:
             print(e)
-            return False
+            raise e
+            # return False
         return True
     
     def show_progress(self):
         '''display amount of completed tasks in list'''
-
-        completed = 0
-        for task in self.tasks:
-            if task.is_done:
-                completed += 1
-        progres = completed / len(self.tasks) * 100
+        if len(self.tasks) > 0:
+            completed = 0
+            for task in self.tasks:
+                if task.is_done:
+                    completed += 1
+            progres = completed / len(self.tasks) * 100
         #todo: call draw_progress(progres)
         
 
-#other fanctions
-def add_new_list():
-    list_name = input('enter list name: ')
-    return  List(list_name)
-
-def delete_list():
-    while True:
-        id = int(input('enter list id: '))
-        if isinstance(id, int):
-            break
-    return List.delete_list(id)
-def change_list_name():
-    id = int(input('enter list id: '))
-    #todo: get list by id from db
-    curr_list = {}
+def change_list_name(todo_list, conn):
     new_name = input('enter new name: ')
-    curr_list.update_list_name(new_name)
+    todo_list.update_list_name(new_name, conn)
 
-def show_list():
-    id = int(input('enter list id: '))
-    if isinstance(id, int):
-        #list = get from db
-        curr_list = {}
-        curr_list.show_list()
-    
+def add_new_list(connection):
+    list_name = input('enter list name: ')
+    new_list = ToDoList(list_name)
+    new_list.save(connection)
+
+def init_db(conn):
+    query = '''CREATE TABLE IF NOT EXISTS list (
+    name VARCHAR(100) NOT NULL,
+    list_id SERIAL,
+    user_id INT);'''
+    with  conn.cursor() as cur:
+        cur.execute(query)
+        conn.commit()
+
+def show_all_lists(conn):
+    todos_dict = {}
+    query = 'SELECT * FROM list'
+    with  conn.cursor() as cur:
+        cur.execute(query)
+        rows = cur.fetchall()
+
+        if rows:
+            for row in rows:
+                l = ToDoList(row[0], row[1])
+                l.show_list()
+                todos_dict[l.list_id] = l
+        conn.commit()
+    return todos_dict   
     
 #list menu
-def show_list_menu():
+def show_list_menu(todo_list, conn):
     option = ''
     while True:
         print('''
             * (u) update list
-            * (a) add new list
             * (d) delete list
             * (s) show list
             * (x) exit
             ''')
         option = input('chose option: ')
         if option == 'u':
-            change_list_name()
-
-        if option == 'a':
-            add_new_list()
+            change_list_name(todo_list, conn)
         
         if option == 'd':
-            delete_list()
+            todo_list.delete_list(conn)
+            return
 
         if option == 's':
-            show_list()
+            todo_list.show_list()
         
         if option == 'x':
             return
