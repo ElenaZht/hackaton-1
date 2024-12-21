@@ -1,0 +1,12 @@
+#ignore everything by default
+*
+
+# Allow Git configuration files
+!.gitignore
+!README.md
+!package.json
+!package-lock.json
+
+# Allow source files
+!*.py
+!*.sql
