@@ -43,8 +43,9 @@ def load_tasks(list_id, conn):
 
 def show_task_menu(list_id, tasks, conn):
     tasks_dict = {t.task_id: t for t in tasks}
+    priority_sigh = {'high': '🚨', 'medium': '❕', 'low': '✅'}
     for task in tasks:
-        print(f"- {task.task_id} - {task.task_desc} - {task.estimation}")
+        print(f"- {task.task_id} - {task.task_desc} - {task.estimation} {priority_sigh[task.priority]}")
     
     while True:
         task_id_option = input('enter task id or (x) exit: ')
