@@ -1,5 +1,7 @@
 from task_menu import load_tasks
 
+def draw_progress(progres):
+    print('progresbar')
 
 class ToDoList:
     tasks = []
@@ -65,14 +67,15 @@ class ToDoList:
     def show_progress(self):
         '''display amount of completed tasks in list'''
         progres = 0
-        if len(self.tasks) > 0:
-            completed = 0
-            for task in self.tasks:
+        completed = 0
+
+        for task in self.tasks:
                 if task.is_done:
                     completed += 1
+
+        if len(self.tasks) > 0:
             progres = completed / len(self.tasks) * 100
-            print(f"{progres}% is ready")
-        else:
-            print(f'{progres}% is ready')
-        #todo: call draw_progress(progres)
+
+        draw_progress(progres)        
+        
         
