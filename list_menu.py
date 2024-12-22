@@ -13,6 +13,7 @@ def add_new_list(connection):
     new_list.save(connection)
 
 def create_list_table(conn):
+    #table list with list_id, name, user_id
     query = '''CREATE TABLE IF NOT EXISTS list (
     list_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -22,7 +23,9 @@ def create_list_table(conn):
         conn.commit()
 
 def show_all_lists(conn):
+    #get all existing lists from db
     todos_dict = {}
+    #todo select where user_id
     query = 'SELECT * FROM list'
     with  conn.cursor() as cur:
         cur.execute(query)
@@ -30,7 +33,9 @@ def show_all_lists(conn):
 
         if rows:
             for row in rows:
+                #create list object from table row, using dict for fast access
                 l = ToDoList(row[1], row[0])
+                # display created list
                 l.show_list(conn)
                 todos_dict[l.list_id] = l
     return todos_dict   

@@ -8,7 +8,7 @@ def show_main_menu(conn):
 
     while option != 'x':
         print('''\n*** Just ToDo It ***\n 
-            * (a)dd new list
+            * (a) add new list
             * (l) my lists
             * (x) exit \n''')
         
@@ -34,14 +34,18 @@ def show_main_menu(conn):
 
 
 def main():
+    # create connection with db
     with  psycopg2.connect(
-            dbname="todo",  # your DB name
-            user="postgres",      # your username
-            password="lena_postgres",  # your password
-            host="localhost"      # your host (localhost for local machine)
+            dbname="todo",  
+            user="postgres",      
+            password="lena_postgres",  
+            host="localhost"      
         ) as conn:
+        #create table list
         create_list_table(conn)
+        #create table task
         create_task_table(conn)
+        #display main menu
         show_main_menu(conn)
 
 

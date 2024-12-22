@@ -2,6 +2,7 @@ from task import Task
 
 
 def create_task_table(conn):
+    #table with task_id, description, priority, estimation, is_done, list_id as foreign key
     query = '''
     DO $$
         BEGIN
@@ -42,6 +43,7 @@ def load_tasks(list_id, conn):
                 
 
 def show_task_menu(list_id, tasks, conn):
+    # create dict for fast access
     tasks_dict = {t.task_id: t for t in tasks}
     for task in tasks:
         print(f"- {task.task_id} - {task.task_desc} - {task.estimation}")
@@ -76,6 +78,7 @@ def show_task_menu(list_id, tasks, conn):
 
                 elif task_option == 's':
                     pass
+                #todo start task func
 
                 elif task_option == 'x':
                     break
