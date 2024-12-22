@@ -4,9 +4,10 @@ from task_menu import load_tasks
 class ToDoList:
     tasks = []
 
-    def __init__(self, list_name, list_id=None):
+    def __init__(self, list_name, user_id, list_id=None):
         self.list_name = list_name
         self.list_id = list_id
+        self.user_id = user_id
         
 
     def show_list(self, conn):
@@ -16,7 +17,7 @@ class ToDoList:
         print(f'List {self.list_id} - {self.list_name} {len(self.tasks)}')
             
     def save(self, conn):
-        query = f"INSERT INTO list (name) VALUES ('{self.list_name}') returning *"
+        query = f"INSERT INTO list (name, user_id) VALUES ('{self.list_name}', {self.user_id}) returning *"
         with  conn.cursor() as cur:
             # execute the INSERT statement
             cur.execute(query)
@@ -63,6 +64,7 @@ class ToDoList:
     
     def show_progress(self):
         '''display amount of completed tasks in list'''
+        progres = 0
         if len(self.tasks) > 0:
             completed = 0
             for task in self.tasks:
@@ -70,5 +72,7 @@ class ToDoList:
                     completed += 1
             progres = completed / len(self.tasks) * 100
             print(f"{progres}% is ready")
+        else:
+            print(f'{progres}% is ready')
         #todo: call draw_progress(progres)
         

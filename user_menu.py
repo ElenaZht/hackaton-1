@@ -21,7 +21,7 @@ def log_in(user_name, password, conn):
                 result = cur.fetchone()  # None if no match
 
         if result:  # If result is not None, login is successful
-            return True
+            return result
         else:
             return False
     except Exception as e:
@@ -36,7 +36,8 @@ def sign_in(user_name, password, conn):
         '''
         with conn.cursor() as cur:
             cur.execute(query_check, (user_name,))
-            if cur.fetchone():
+            result = cur.fetchone()
+            if result:
                 print("Username already exists. Please choose a different username.")
                 return False
 
@@ -47,6 +48,9 @@ def sign_in(user_name, password, conn):
         '''
         with conn.cursor() as cur:
             cur.execute(query_insert, (user_name, password))
+            result = cur.fetchone()
+            if result:
+                return result
             conn.commit()
 
         print("Sign-up successful! You can now log in.")
@@ -59,6 +63,7 @@ def show_user_menu(conn):
     #create users table if not exist
     create_users_table(conn)
     user_option = ''
+    result = None
 
     while True:
         print(''' **Hello! This is Just ToDo It!***
@@ -83,7 +88,7 @@ def show_user_menu(conn):
             result = log_in(user_name, password, conn)
             if result:
                 print('you logged in successfuly')
-                return True
+                return result
             else:
                 print('user name or password is incorrect, if you have no account, please, sign in')
         elif user_option == 's':
@@ -98,4 +103,4 @@ def show_user_menu(conn):
             result = sign_in(user_name, password, conn)
             if result:
                 print('you signed in successfuly')
-                return True
+                return result
