@@ -3,13 +3,22 @@ from task_menu import show_task_menu, create_task_prompt
 
 
 def change_list_name(todo_list, conn):
-    new_name = input('enter new name: ')
-    todo_list.update_list_name(new_name, conn)
+    while True:
+        new_name = input('enter new name: ')
+        if new_name != '':
+            todo_list.update_list_name(new_name, conn)
+        else:
+            print('invalid name, try again')
 
 def add_new_list(connection, curr_user):
-    list_name = input('enter list name: ')
-    new_list = ToDoList(list_name, curr_user[0])
-    new_list.save(connection)
+    while True:
+        list_name = input('enter list name: ')
+        if list_name != '':
+            new_list = ToDoList(list_name, curr_user[0])
+            new_list.save(connection)
+            break
+        else:
+            print('invalid name, try again')
 
 def create_list_table(conn):
     query = '''CREATE TABLE IF NOT EXISTS list (

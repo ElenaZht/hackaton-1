@@ -77,13 +77,23 @@ def show_user_menu(conn):
             return False
 
         elif user_option == 'l':
-            user_name = input('enter user name or (x) exit: ')
+            while True:
+                user_name = input('enter user name or (x) exit: ')
+                if user_name == '':
+                    print('user name cant be empty')
+                    continue
+                else:
+                    break
             if user_name == 'x':
                 continue
-
-            password = input('enter your password or (x) exit: ')
-            if password == 'x':
-                continue
+            
+            while True:
+                password = input('enter your password or (x) exit: ')
+                if password == '':
+                    print('password cant be empty')
+                    continue
+                else:
+                    break
 
             result = log_in(user_name, password, conn)
             if result:
@@ -92,11 +102,23 @@ def show_user_menu(conn):
             else:
                 print('user name or password is incorrect, if you have no account, please, sign in')
         elif user_option == 's':
-            user_name = input('enter user name or (x) exit: ')
+            while True:
+                user_name = input('enter user name or (x) exit: ')
+                if user_name == '':
+                    print('user name cant be empty')
+                    continue
+                else:
+                    break
             if user_name == 'x':
                 continue
 
-            password = input('enter your password or (x) exit: ')
+            while True:
+                password = input('enter your password or (x) exit: ')
+                if password == '':
+                    print('password cant be empty')
+                    continue
+                else:
+                    break
             if password == 'x':
                 continue
 
@@ -104,3 +126,6 @@ def show_user_menu(conn):
             if result:
                 print('you signed in successfuly')
                 return result
+            
+        else:
+            print('invalid option')
