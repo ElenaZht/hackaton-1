@@ -66,7 +66,6 @@ def show_task_menu(list_id, tasks, conn):
                 print('''
                     * (d) delete task
                     * (u) update task
-                    * (s) start task
                     * (x) exit
                     ''')
                 task_option = input('choose option: ')
@@ -96,9 +95,6 @@ def show_task_menu(list_id, tasks, conn):
                         else:
                             break
                     tasks_dict[task_id_option].update(task_desc, priority, estimation, conn)
-
-                elif task_option == 's':
-                    pass
 
                 elif task_option == 'x':
                     break
