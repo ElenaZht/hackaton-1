@@ -20,7 +20,7 @@ class ToDoList:
         with  conn.cursor() as cur:
             # execute the INSERT statement
             cur.execute(query)
-            # get the generated id back
+            # get the table row tuple back
             row = cur.fetchone()
             if row:
                 self.list_id = row[0]
@@ -29,7 +29,7 @@ class ToDoList:
 
     
     def delete_list(self, conn):
-        '''delete todo list, list tasks delete cascade'''
+        '''delete todo list, list tasks deletes as a cascade'''
         query = f"DELETE FROM list WHERE list_id = {self.list_id};"
 
         try:
@@ -39,7 +39,6 @@ class ToDoList:
 
         except Exception as e:
             raise e
-            return False
         return True
 
     def update_list_name(self, new_name, conn):
