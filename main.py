@@ -22,6 +22,10 @@ def show_main_menu(conn, curr_user):
             lists_dict = show_all_lists(conn, curr_user)
             while option != 'x':
                 list_id = input('enter list id or (x) exit: ')
+                if list_id == '' or not list_id.isdigit():
+                    print('invalid id format')
+                    continue
+                
                 if list_id == 'x':
                     break
                 show_list_menu(lists_dict[int(list_id)], conn)

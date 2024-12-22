@@ -48,6 +48,10 @@ def show_task_menu(list_id, tasks, conn):
     
     while True:
         task_id_option = input('enter task id or (x) exit: ')
+        if task_id_option == '' or not list_id.isdigit():
+            print('invalid id format')
+            continue
+
         if task_id_option == 'x':
             break
         try:
@@ -69,9 +73,27 @@ def show_task_menu(list_id, tasks, conn):
                     tasks_dict[task_id_option].delete_task(conn)
 
                 elif task_option == 'u':
-                    task_desc = input('enter task description: ')
-                    priority = input('enter priority ("low", "medium", "high"): ')
-                    estimation = int(input('enter estimation: '))
+                    while True:
+                        task_desc = input('enter task description: ')
+                        if task_option == '':
+                            print('description cant be empty')
+                            continue
+                        else:
+                            break
+                    while True:
+                        priority = input('enter priority ("low", "medium", "high"): ')
+                        if priority not in ('low', 'medium', 'heigh'):
+                            print('invalid priority option')
+                            continue
+                        else:
+                            break
+                    while True:
+                        estimation = int(input('enter estimation: '))
+                        if estimation == '' or not estimation.is_digit():
+                            print('invalid estimation format')
+                            continue
+                        else:
+                            break
                     tasks_dict[task_id_option].update(task_desc, priority, estimation, conn)
 
                 elif task_option == 's':
@@ -88,9 +110,28 @@ def show_task_menu(list_id, tasks, conn):
         
 
 def create_task_prompt(list_id, conn):
-    #todo: add input validation
-    task_desc = input('enter task description: ')
-    priority = input('enter priority ("low", "medium", "high"): ')
-    estimation = int(input('enter estimation: '))
+    while True:
+        task_desc = input('enter task description: ')
+        if task_desc == '':
+            print('description cant be empty')
+            continue
+        else:
+            break
+
+    while True:
+        priority = input('enter priority ("low", "medium", "high"): ')
+        if priority not in ('low', 'medium', 'heigh'):
+            print('invalid priority option')
+            continue
+        else:
+            break
+
+    while True:
+        estimation = int(input('enter estimation: '))
+        if estimation == '' or not estimation.is_digit():
+            print('invalid estimation format')
+            continue
+        else:
+            break
     t = Task(task_desc=task_desc, priority=priority, estimation=estimation, list_id=list_id)
     t.add_task(conn)
