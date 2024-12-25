@@ -49,7 +49,7 @@ def show_task_menu(list_id, tasks, conn):
     
     while True:
         task_id_option = input('enter task id or (x) exit: ')
-        if task_id_option == '' or not list_id.isdigit():
+        if task_id_option == '' or not task_id_option.isdigit() and task_id_option != 'x':
             print('invalid id format')
             continue
 
@@ -123,12 +123,12 @@ def create_task_prompt(list_id, conn):
         else:
             break
 
-    while True:
-        estimation = int(input('enter estimation: '))
-        if estimation == '' or not estimation.is_digit():
-            print('invalid estimation format')
-            continue
-        else:
-            break
+    # while True:
+    estimation = int(input('enter estimation: '))
+        # if estimation == '' or not estimation.is_digit():
+        #     print('invalid estimation format')
+        #     continue
+        # else:
+        #     break
     t = Task(task_desc=task_desc, priority=priority, estimation=estimation, list_id=list_id)
     t.add_task(conn)

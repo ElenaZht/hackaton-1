@@ -10,7 +10,7 @@ def create_users_table(conn):
 
 def log_in(user_name, password, conn):
     if user_name == '' or password == '':
-        return False
+        return None
     try:
         query = '''
             SELECT * FROM users
@@ -23,10 +23,10 @@ def log_in(user_name, password, conn):
         if result:  # If result is not None, login is successful
             return result
         else:
-            return False
+            return None
     except Exception as e:
         print(f"An error occurred: {e}")
-        return False
+        return None
 
 def sign_in(user_name, password, conn):
     try:
@@ -39,25 +39,23 @@ def sign_in(user_name, password, conn):
             result = cur.fetchone()
             if result:
                 print("Username already exists. Please choose a different username.")
-                return False
+                return None
 
         # Insert the new user into the database
         query_insert = '''
         INSERT INTO users (user_name, password)
-        VALUES (%s, %s);
+        VALUES (%s, %s) RETURNING *;
         '''
         with conn.cursor() as cur:
             cur.execute(query_insert, (user_name, password))
             result = cur.fetchone()
-            if result:
-                return result
             conn.commit()
 
         print("Sign-up successful! You can now log in.")
-        return True
+        return result
     except Exception as e:
         print(f"An error occurred during sign-up: {e}")
-        return False
+        return None
 
 def show_user_menu(conn):
     #create users table if not exist

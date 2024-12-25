@@ -28,23 +28,25 @@ def create_list_table(conn):
     with  conn.cursor() as cur:
         cur.execute(query)
         conn.commit()
-
+        
 def show_all_lists(conn, curr_user):
     todos_dict = {}
     query = f'SELECT * FROM list WHERE user_id = {curr_user[0]}'
-    with  conn.cursor() as cur:
+    with conn.cursor() as cur:
         cur.execute(query)
         rows = cur.fetchall()
 
         if rows:
             for row in rows:
-                l = ToDoList(row[1], row[2],row[0])
+                l = ToDoList(row[1], row[2], row[0])
                 print(f'{row[0]} - {row[1]}')
                 todos_dict[l.list_id] = l
         else:
-            print('you have no lists yet')
-    return todos_dict   
-    
+            print('You have no lists yet.')
+            return None
+
+    return todos_dict
+
 #list menu
 def show_list_menu(todo_list, conn):
     option = ''
